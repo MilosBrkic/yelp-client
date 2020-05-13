@@ -1,0 +1,121 @@
+<html>
+    <head>
+      <title>YelpCamp</title>
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+      <link rel="stylesheet" href="stylesheets/main.css">
+      <link href="https://fonts.googleapis.com/css?family=Lato:400,700i&display=swap" rel="stylesheet">
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+      <script src="js/url.js"></script>
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" 
+      integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ"   
+      crossorigin="anonymous">
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#toggleNav" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="toggleNav">
+              <ul class="navbar-nav">
+                  <p class="navbar-brand" href=""><i class="fab fa-gripfire"></i> YelpCamp</p>
+              </ul>
+              <ul class="navbar-nav mr-auto">
+
+                <li class="nav-link">
+                  <a class="nav-link" href="index.html">Home</a>
+                </li>
+                       
+                <li class="nav-link">
+                  <a id="register" class="nav-link" href="register.html">Sign Up</a>
+                </li>
+
+                <li class="nav-link">
+                  <a id="login" class="nav-link" href="login.html">Login</a>
+                </li>
+
+              </ul> 
+            </div>
+          </nav>
+
+          <!--<div class="container">
+            
+            <div class="alert alert-danger" role="alert">
+              
+            </div>
+           
+            <div class="alert alert-success" role="alert">
+              
+            </div>
+            
+          </div>-->
+
+      <div class="container" >
+          <header class="jumbotron justify-content-center">
+              <div class="container">
+                  <div>
+                      <h1 class="niceFont">Welcome to <em>YelpCamp!</em></h1>
+                      <p>Explore the best campgrounds in the world!</p>
+                      <p>
+                          <a class="btn btn-outline-primary btn-large" href="new.html">Add New Campground!</a>
+                      </p>
+                      <p>                        
+                          <div class="form-group">
+                          <input type="text" id="search" name="search" placeholder="Campground search..." class="form-control">
+                          </div>
+                      </p>
+                  </div>              
+              </div>
+          </header>
+
+          <script>
+
+          $(document).ready(function(){
+
+              $(function () {
+                  $('#search').on('input',function(e){
+                      var vrednost = $("#search").val();
+                      $.get(url+'campgrounds/searching', { search: vrednost }, function (data) {                        
+                      $("#campsList").empty();
+                      data.forEach(function(campground){
+                        $("#campsList").append('<div class="col-md-3 col-sm-6">  <div class="img-thumbnail" > <img src="'+campground.image +'" width="100%"> <div class="caption">  <h4>'+campground.name+'</h4> </div>   <p>   <form action="show.html"><input type="hidden" name="id" value='+campground._id+'><input type="submit" value="More info"></form>    </p>  </div>  </div>');
+                      });
+
+                      });
+                  });
+              });
+          
+             
+            $.get(url+'api', { }, function (data) {                       
+                $("#campsList").empty();   
+
+                data.campgrounds.forEach(function(campground){
+                    $("#campsList").append('<div class="col-md-3 col-sm-6">  <div class="img-thumbnail" > <img src="'+campground.image +'" width="100%"> <div class="caption">  <h4>'+campground.name+'</h4> </div>   <p>   <form action="show.html"><input type="hidden" name="id" value='+campground._id+'><input type="submit" value="More info"></form>    </p>  </div>  </div>');
+                });
+
+                var user = localStorage.getItem("username");
+
+                if(user != null && user != ""){//ako je prijavljen
+                  $("#login").attr("href", "javascript:logoff()").html("Logout");
+                  $("#register").attr("href", "").html('Signed in as '+user);
+                }
+
+            });
+          
+        });
+
+        function logoff(){
+          localStorage.setItem("username", "");
+          localStorage.setItem("id", "");
+          window.location.href = "index.html";
+        }
+
+        </script>   
+          
+          <div id="campsList" class="row text-center" style="display: flex; flex-wrap: wrap;"></div>
+
+      </div>
+   </body>
+</html>

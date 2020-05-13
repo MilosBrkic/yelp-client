@@ -1,0 +1,121 @@
+<html>
+    <head>
+      <title>YelpCamp</title>
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+      <link rel="stylesheet" href="stylesheets/main.css">
+      <link href="https://fonts.googleapis.com/css?family=Lato:400,700i&display=swap" rel="stylesheet">
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+      <script src="js/url.js"></script>
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" 
+      integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ"   
+      crossorigin="anonymous">
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#toggleNav" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="toggleNav">
+              <ul class="navbar-nav">
+                  <p class="navbar-brand" href=""><i class="fab fa-gripfire"></i> YelpCamp</p>
+              </ul>
+              <ul class="navbar-nav mr-auto">
+
+                <li class="nav-link">
+                  <a class="nav-link" href="index.html">Home</a>
+                </li>
+                       
+              </ul> 
+            </div>
+          </nav>
+
+        <div class="container">
+            <!-- <div class="row"> -->
+                <h1 id="title-name" style="text-align: center;">Edit <%= campground.name %></h1>
+                <div style="width: 30%; margin: 25px auto;">
+                    <form id="edit-form">
+                        <div class="form-group">
+                            <input class="form-control" id="name" type="text" name="campground[name]" value="<%= campground.name %>">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" id="price" type="number" name="campground[price]" value="<%= campground.price %>" min="0.01" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" id="image" type="text" name="campground[image]" value="<%= campground.image %>">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" id="desc" type="text" name="campground[description]" value="<%= campground.description %>">
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-large btn-primary btn-block">Submit!</button>
+                        </div>
+                    </form>
+                    <a href="index.html">Go Back!</a>
+                </div>
+                
+            <!-- </div> -->
+        </div>
+
+    </body>
+
+    <script>
+        $(document).ready(function(){
+      
+              var id = window.location.href.split("=").pop();    
+              var user = localStorage.getItem("username");
+                
+
+              $.get(url+'campgrounds/'+id, { }, function (data) {                       
+
+                  $("#title-name").html('Edit '+data.campground.name);
+                  $("#name").val(data.campground.name);
+                  $("#price").val(data.campground.price);
+                  $("#desc").val(data.campground.description);
+                  $("#image").val(data.campground.image);
+
+                  
+                  /*if(user == data.campground.author.username){
+                    //$("#controls").html('<a class="btn btn-warning" href="/campgrounds/<%= campground._id %>/edit">Edit</a>    <form id="delete-form"> <button class="btn btn-danger">Delete</button></form>');
+                    //$("#controls").html('<form "action="edit.html"><input type="hidden" name="id" value='+data.campground._id+'><input class="btn btn-warning" type="submit" value="Edit"></form>     <form id="delete-form"> <button class="btn btn-danger">Delete</button></form> ');
+                    $("#username").html('Signed in as '+user);
+                  }*/
+                    
+              });
+      
+              $(document).on('submit', '#edit-form', function () {
+                  //console.log("delete");
+
+                    var name = $("#name").val();
+                    var price = $("#price").val();
+                    var image = $("#image").val();
+                    var description = $("#desc").val();
+                    var username = user;
+                    //var id = readCookie("id");
+
+                  $.ajax({
+                    url: url+'api/'+id+'?name='+name+'&image='+image+'&price='+price+'&description='+description,
+                    type: "PUT",
+                    data: {
+      
+                    },
+                    success: function (result) {
+                      window.location.href = "index.html";     
+                    },
+                    error: function (xhr, resp, text) {
+                      console.log("Pogresni podaci");
+                      //$('#response').html("<div class='alert alert-danger'>Neispravan username ili password</div>");
+                    }
+                  });
+                                  
+      
+                return false;
+              });
+        
+        });
+      </script>
+
+
+</html>

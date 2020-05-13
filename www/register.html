@@ -1,0 +1,101 @@
+<html>
+    <head>
+      <title>YelpCamp</title>
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+      <link rel="stylesheet" href="stylesheets/main.css">
+      <link href="https://fonts.googleapis.com/css?family=Lato:400,700i&display=swap" rel="stylesheet">
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+      <script src="js/url.js"></script>
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" 
+      integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ"   
+      crossorigin="anonymous">
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#toggleNav" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="toggleNav">
+              <ul class="navbar-nav">
+                  <p class="navbar-brand" href=""><i class="fab fa-gripfire"></i> YelpCamp</p>
+              </ul>
+              <ul class="navbar-nav mr-auto">
+
+                <li class="nav-link">
+                  <a class="nav-link" href="index.html">Home</a>
+                </li>                     
+
+                <li class="nav-link">
+                  <a id="login" class="nav-link" href="login.html">Login</a>
+                </li>
+
+              </ul> 
+            </div>
+          </nav>
+
+    <h1 class="text-center">Sign Up!</h1>
+
+    <div class="container">
+      <div class="row">
+        <div style="width: 30%; margin: 30px auto;">
+          <form id="register">
+            <div class="form-group">
+              <input class="form-control" id="username" pattern=".{6,12}" title="Username must be 6 to 12 characters" type="text"
+                name="username" placeholder="username" required>
+            </div>
+            <div class="form-group">
+              <input class="form-control" id="password" pattern=".{5,10}" title="Password must be 5 to 10 characters" type="password"
+                name="password" placeholder="password" required>
+            </div>
+            <!-- <div class="form-group">
+                <input class="form-control" type="text" name="adminCode" placeholder="Admin Code">
+            </div> -->
+            <button class="btn btn-lg btn-success btn-block">Sign Up</button>
+          </form>
+        </div>
+      </div>
+      <p class="text-center">Already have an account? <a href="login.html">Log In here!</a></p>
+      <div id="response"></div>
+    </div>
+
+    <script>
+
+      $(document).ready(function () {
+          $(document).on('submit', '#register', function () {
+
+            var username = $("#username").val();
+            var password = $("#password").val();
+
+            $.ajax({
+              url: url+"register",
+              type: "POST",
+              data: {
+                username: username,
+                password: password
+              },
+              success: function (result) {
+                $('#response').html('<div class="alert alert-danger">'+result.message+'</div>');
+              },
+              error: function (xhr, resp, text) {
+                console.log("Pogresni podaci");
+                $('#response').html("<div class='alert alert-danger'>Neispravan username ili password</div>");
+              }
+            });
+            return false;
+          });
+
+        });
+
+
+    </script>
+
+
+
+    </body>
+
+
+
+</html>

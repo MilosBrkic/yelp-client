@@ -1,0 +1,142 @@
+<html>
+    <head>
+      <title>YelpCamp</title>
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+      <link rel="stylesheet" href="stylesheets/main.css">
+      <link href="https://fonts.googleapis.com/css?family=Lato:400,700i&display=swap" rel="stylesheet">
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+      <script src="js/url.js"></script>
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" 
+      integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ"   
+      crossorigin="anonymous">
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#toggleNav" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="toggleNav">
+              <ul class="navbar-nav">
+                  <p class="navbar-brand" href=""><i class="fab fa-gripfire"></i> YelpCamp</p>
+              </ul>
+              <ul class="navbar-nav mr-auto">
+
+                <li class="nav-link">
+                  <a class="nav-link" href="index.html">Home</a>
+                </li>                     
+
+              </ul> 
+            </div>
+          </nav>
+
+
+<div class="container">
+    <div class="row">
+      
+        <div class="col-md-12">
+          <p class="lead">YelpCamp</p>
+
+            
+
+        
+            <div class="thumbnail">
+                <img id="picture" class="img-responsive" src="<%= campground.image %>" alt="">
+                <div class="caption-full">
+                    <h4 id="price" class="float-right"><%= campground.price %>$/night</h4>
+                    <h4 id="name"><a href=""><%=campground.name %></a></h4>
+                    <p id="desc"><%= campground.description %></p>
+                    <p id="author"><em>Submitted By <%= campground.author.username %></em></p>
+                    
+                    <div id="controls">
+                      
+                    </div>
+                    
+                </div>
+            </div>
+
+            <!--<div class="well">  
+                <div class="text-right">
+                        <a class="btn btn-success" href="/campgrounds/<%= campground._id %>/comments/new">Add new comment!</a>
+                </div>
+                <hr>
+                <% campground.comments.forEach(function(comment){ %>
+                    <div class="">
+                        <div class="col-md-12">
+                              <%= comment.author.username %>
+                              <span>10 days ago</span>
+                              <p>
+                                <%= comment.text %>
+                              </p>
+                              <% if(currentUser && comment.author.id.equals(currentUser._id) || currentUser && currentUser.isAdmin){ %>
+                              <a class="btn btn-sm btn-warning" 
+                              href="/campgrounds/<%=campground._id%>/comments/<%=comment._id%>/edit">Edit</a>
+                            <form id="delete-form" action="/campgrounds/<%=campground._id%>/comments/<%=comment._id%>?_method=DELETE" method="POST">
+                                <input  type="submit" class="btn btn-sm btn-danger" value="Delete">
+                            </form>
+                            <% } %>
+                        </div>
+                    </div>              
+                <% })%>
+            </div>-->
+        </div>
+    </div>
+
+
+<script>
+  $(document).ready(function(){
+
+        var id = window.location.href.split("=").pop();
+
+        var user = localStorage.getItem("username");
+
+        
+
+
+        $.get(url+'campgrounds/'+id, { }, function (data) {                       
+            console.log(data);
+            $("#name").html(data.campground.name);
+            $("#price").html(data.campground.price+" $/night");
+            $("#desc").html(data.campground.description);
+            $("#author").html('<em>Submitted By '+data.campground.author.username+'</em>');
+            $("#picture").attr("src",data.campground.image);
+
+            if(user == data.campground.author.username){
+              //$("#controls").html('<a class="btn btn-warning" href="/campgrounds/<%= campground._id %>/edit">Edit</a>    <form id="delete-form"> <button class="btn btn-danger">Delete</button></form>');
+              $("#controls").html('<form action="edit.html"><input type="hidden" name="id" value='+data.campground._id+'><input class="btn btn-warning" type="submit" value="Edit"></form>     <form id="delete-form"> <button class="btn btn-danger">Delete</button></form> ');
+              $("#username").html('Signed in as '+user);
+            }
+            
+              
+        });
+
+        $(document).on('submit', '#delete-form', function () {
+            console.log("delete");
+            $.ajax({
+              url: url+"api/"+id,
+              type: "DELETE",
+              data: {
+
+              },
+              success: function (result) {
+                window.location.href = "index.html";
+              },
+              error: function (xhr, resp, text) {
+                console.log("Pogresni podaci");
+                //$('#response').html("<div class='alert alert-danger'>Neispravan username ili password</div>");
+              }
+            });
+                
+          
+
+          return false;
+        });
+  
+  });
+</script>
+
+
+    </body>
+</html>
